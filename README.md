@@ -87,8 +87,27 @@ Three looks, switchable from the title bar: **Morning** (light), **Evening** (du
 
 ## Screenshots
 
+### Three themes
+| | | |
+|---|---|---|
+| ![Midnight](docs/screenshots/main-midnight.png) | ![Evening](docs/screenshots/main-evening.png) | ![Morning](docs/screenshots/main-morning.png) |
+| **Midnight**: black cinema | **Evening**: dusky purple | **Morning**: warm paper |
+
+### Editing tools
 | | |
 |---|---|
+| ![Transitions](docs/screenshots/animations.png) | ![Visual effects](docs/screenshots/effects.png) |
+| **Animations:** 25 transitions (here, Iris mid-wipe) plus pan and zoom | **Visual Effects:** Film noir, with brightness, contrast and saturation |
+| ![Green screen](docs/screenshots/green-screen.png) | ![Audio effects](docs/screenshots/edit-audio.png) |
+| **Green screen:** the subject keyed over a background image | **Edit:** volume, fades, audio effects ("Match visual effect"), speed, **reverse** and trimming |
+| ![Titles](docs/screenshots/titles.png) | ![Music](docs/screenshots/music.png) |
+| **Text:** style presets, like this silent-film title card with an ornate frame | **Music:** volume, fades, audio effects, start time and trimming |
+| ![Project](docs/screenshots/project.png) | ![View](docs/screenshots/view.png) |
+| **Project:** audio mix, aspect ratios, frame rate and framing | **View:** storyboard zoom, thumbnail size, preview quality and themes |
+| ![File menu](docs/screenshots/file-menu.png) | ![Save movie](docs/screenshots/save-movie.png) |
+| **File menu:** recent projects (and a little rainbow) | **Save movie:** presets up to 8K, modern formats and GPU encoding |
+
+---|---|
 | ![Midnight theme](docs/screenshots/main-midnight.png) | ![Evening theme](docs/screenshots/main-evening.png) |
 | **Midnight** | **Evening** |
 | ![Morning theme](docs/screenshots/main-morning.png) | ![Visual effects](docs/screenshots/effects.png) |
