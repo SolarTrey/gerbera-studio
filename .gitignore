@@ -1,0 +1,9 @@
+bin/
+obj/
+out/
+installer/
+*.user
+*.log
+build-log.txt
+installer-log.txt
+.vs/

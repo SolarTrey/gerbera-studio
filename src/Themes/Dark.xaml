@@ -1,0 +1,49 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <SolidColorBrush x:Key="B.Window" Color="#000000"/>
+    <SolidColorBrush x:Key="B.Title" Color="#000000"/>
+    <SolidColorBrush x:Key="B.Tabs" Color="#000000"/>
+    <SolidColorBrush x:Key="B.Ribbon" Color="#0B0B0B"/>
+    <SolidColorBrush x:Key="B.GroupSep" Color="#1C1C1C"/>
+    <SolidColorBrush x:Key="B.Panel" Color="#000000"/>
+    <SolidColorBrush x:Key="B.Storyboard" Color="#050505"/>
+    <SolidColorBrush x:Key="B.Text" Color="#E8E3D6"/>
+    <SolidColorBrush x:Key="B.Dim" Color="#77736A"/>
+    <SolidColorBrush x:Key="B.Border" Color="#1F1F1F"/>
+    <SolidColorBrush x:Key="B.HoverBorder" Color="#3A352A"/>
+    <SolidColorBrush x:Key="B.Accent" Color="#F2B134"/>
+    <SolidColorBrush x:Key="B.AccentText" Color="#1A1200"/>
+    <SolidColorBrush x:Key="B.Hover" Color="#1A1814"/>
+    <SolidColorBrush x:Key="B.Pressed" Color="#2A251B"/>
+    <SolidColorBrush x:Key="B.Checked" Color="#2B2414"/>
+    <SolidColorBrush x:Key="B.Input" Color="#0F0F0F"/>
+    <SolidColorBrush x:Key="B.InputBorder" Color="#2A2A2A"/>
+    <SolidColorBrush x:Key="B.TileBorder" Color="#2A2A2A"/>
+    <SolidColorBrush x:Key="B.Selection" Color="#F2B134"/>
+    <SolidColorBrush x:Key="B.Music" Color="#7A6A3A"/>
+    <SolidColorBrush x:Key="B.Caption" Color="#6B5A7E"/>
+    <SolidColorBrush x:Key="B.Playhead" Color="#F2B134"/>
+    <SolidColorBrush x:Key="B.FileTab" Color="#F2B134"/>
+    <SolidColorBrush x:Key="B.CtxVideo" Color="#F2B134"/>
+    <SolidColorBrush x:Key="B.CtxMusic" Color="#C9B98A"/>
+    <SolidColorBrush x:Key="B.CtxText" Color="#B9A6D6"/>
+    <SolidColorBrush x:Key="B.Status" Color="#000000"/>
+    <SolidColorBrush x:Key="B.Thumb" Color="#2E2C28"/>
+    <SolidColorBrush x:Key="B.Menu" Color="#111111"/>
+    <SolidColorBrush x:Key="B.Glyph" Color="#BDB5A3"/>
+    <SolidColorBrush x:Key="B.GlyphBlue" Color="#F2B134"/>
+    <SolidColorBrush x:Key="B.GlyphGreen" Color="#D6C79F"/>
+    <SolidColorBrush x:Key="B.GlyphRed" Color="#E0705A"/>
+    <SolidColorBrush x:Key="B.GlyphOrange" Color="#F2B134"/>
+    <SolidColorBrush x:Key="B.GlyphPurple" Color="#D6C79F"/>
+    <SolidColorBrush x:Key="B.GlyphYellow" Color="#F2B134"/>
+    <SolidColorBrush x:Key="B.PreviewBg" Color="#000000"/>
+    <SolidColorBrush x:Key="B.TileBg" Color="#121212"/>
+    <SolidColorBrush x:Key="B.Insert" Color="#F2B134"/>
+    <SolidColorBrush x:Key="B.PreviewFrame" Color="#000000"/>
+    <SolidColorBrush x:Key="B.Timecode" Color="#F2B134"/>
+    <SolidColorBrush x:Key="B.SprocketBand" Color="#121212"/>
+    <SolidColorBrush x:Key="B.Sprocket" Color="#2C2A26"/>
+    <Color x:Key="C.Accent">#F2B134</Color>
+    <FontFamily x:Key="F.Display">Bahnschrift SemiCondensed, Bahnschrift, Segoe UI</FontFamily>
+</ResourceDictionary>
