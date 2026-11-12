@@ -14,7 +14,7 @@
   - A **Preview** button in Labs, so you can see it without restarting.
 - **Default export settings.** Click **Set as my default** in the Export dialog, or use **File ▸ Default export settings…**, to remember your favorite resolution, frame rate, video format, quality and audio. "My default" is then pre-selected every time you export.
 - **What's new on update.** The first time you open Gerbera Studio after installing an update, a "What's new" window shows that version's changes. Fresh installs skip it. You can reopen it anytime from **File ▸ What's new**.
-- **Friendlier updates.** When an older version is already installed, the installer asks whether you'd like to update it, and reminds you that your settings and projects are kept.
+- **Friendlier updates.** When an older version is already installed, the installer asks whether you'd like to update it, and reminds you that your settings and projects are kept. The installer also follows your Windows light or dark mode.
 - **New Split icon.** Split now shows two film frames with a cut line, so it's no longer confused with Cut's scissors.
 
 ### Changed
