@@ -8,7 +8,7 @@ using MovieMakerReborn.Model;
 
 namespace MovieMakerReborn.Views;
 
-/// <summary>"Save movie" dialog: presets plus full control over resolution, frame rate, codecs and quality.</summary>
+/// <summary>"Export movie" dialog: presets plus full control over resolution, frame rate, codecs and quality.</summary>
 public class ExportDialog : Window
 {
     public ExportSettings Result;
@@ -38,7 +38,9 @@ public class ExportDialog : Window
 
     static readonly int[] ShortSides = { 4320, 2880, 2160, 1440, 1080, 720, 480, 360 };
     static readonly string[] ShortNames = { "8K", "5K", "4K Ultra HD", "Quad HD", "Full HD", "HD", "SD", "Low" };
-    static readonly (string Key, string Label, string Sub)[] PresetList =
+    readonly (string Key, string Label, string Sub)[] PresetList;
+    readonly bool _settingsMode;
+    static readonly (string Key, string Label, string Sub)[] BasePresets =
     {
         ("rec", "Recommended for this project", "Best match for your clips"),
         ("4k", "4K Ultra HD", "2160p · H.264"),
@@ -56,18 +58,19 @@ public class ExportDialog : Window
         ("custom", "Custom settings", "Everything below is yours"),
     };
 
-    public ExportDialog(Project p, Settings s, string quick)
+    public ExportDialog(Project p, Settings s, string quick, bool settingsMode = false)
     {
-        _p = p; _s = s;
+        _p = p; _s = s; _settingsMode = settingsMode;
+        PresetList = (s.DefaultExport != null ? new[] { ("mydefault", "My default", "Your saved export settings") }.Concat(BasePresets) : BasePresets).ToArray();
         Style = (Style)Application.Current.FindResource("DialogWindow");
-        Title = "Save movie";
+        Title = settingsMode ? "Default export settings" : "Export movie";
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
         Width = 900; Height = 640;
         ResizeMode = ResizeMode.CanResizeWithGrip;
         ThemeHelper.ApplyTitleBar(this);
         BuildUi();
         Populate();
-        string start = quick switch { "4k" => "4k", "1080" => "1080", "vertical" => "vertical", _ => "rec" };
+        string start = quick switch { "4k" => "4k", "1080" => "1080", "vertical" => "vertical", _ => s.DefaultExport != null ? "mydefault" : "rec" };
         _presets.SelectedIndex = Array.FindIndex(PresetList, x => x.Key == start);
         CheckEncodersAsync();
     }
@@ -170,10 +173,15 @@ public class ExportDialog : Window
         root.Children.Add(scroll);
 
         var buttons = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Right, Margin = new Thickness(0, 14, 0, 0) };
-        var save = new Button { Content = "Save movie", IsDefault = true, MinWidth = 110 };
+        var save = new Button { Content = "Export", IsDefault = !_settingsMode, MinWidth = 110 };
+        var setDef = new Button { Content = _settingsMode ? "Save as my default" : "Set as my default", IsDefault = _settingsMode, MinWidth = 140, Margin = new Thickness(0, 0, 8, 0),
+            ToolTip = "Remember these settings and pre-select them every time you export" };
         var cancel = new Button { Content = "Cancel", IsCancel = true, MinWidth = 90, Margin = new Thickness(8, 0, 0, 0) };
         save.Click += (_, _) => Save();
-        buttons.Children.Add(save); buttons.Children.Add(cancel);
+        setDef.Click += (_, _) => SaveDefault();
+        buttons.Children.Add(setDef);
+        if (!_settingsMode) buttons.Children.Add(save);
+        buttons.Children.Add(cancel);
         Grid.SetRow(buttons, 1); Grid.SetColumnSpan(buttons, 2);
         root.Children.Add(buttons);
         Content = root;
@@ -318,6 +326,7 @@ public class ExportDialog : Window
     void ApplyPreset(string key)
     {
         if (_sync) return;
+        if (key == "mydefault" && _s.DefaultExport != null) { ApplyProfile(_s.DefaultExport); return; }
         if (key == "custom") { UpdateSummary(); return; }
         _sync = true;
         int maxShort = 1080;
@@ -357,6 +366,54 @@ public class ExportDialog : Window
         FixExtension();
         _sync = false;
         UpdateSummary();
+    }
+
+    void ApplyProfile(ExportProfile d)
+    {
+        _sync = true;
+        if (d.ShortSide > 0) { SelectTag(_res, d.ShortSide); SyncDims(); }
+        else { _res.SelectedIndex = _res.Items.Count - 1; _w.Text = d.Width.ToString(); _h.Text = d.Height.ToString(); }
+        int fi = d.UseProjectFps ? Array.FindIndex(Presets.FrameRates, f => f.Num == _p.FpsNum && f.Den == _p.FpsDen)
+                                 : Array.FindIndex(Presets.FrameRates, f => f.Num == d.FpsNum && f.Den == d.FpsDen);
+        if (fi >= 0) _fps.SelectedIndex = fi;
+        else { _fps.SelectedIndex = _fps.Items.Count - 1; _fpsCustom.Text = d.UseProjectFps ? $"{_p.FpsNum}/{_p.FpsDen}" : $"{d.FpsNum}/{d.FpsDen}"; }
+        SelectTag(_interp, d.Interp);
+        SelectCodec(d.Codec);
+        FillContainers(d.Container);
+        FillAudio(d.Audio);
+        _modeCrf.IsChecked = !d.UseBitrate; _modeBr.IsChecked = d.UseBitrate;
+        _quality.Value = 40 - d.Crf;
+        UpdateQualityLabel();
+        _bitrate.Text = d.BitrateMbps;
+        SelectTag(_speed, d.Speed);
+        _tenBit.IsChecked = d.TenBit;
+        SelectTag(_audioKbps, d.AudioKbps);
+        _audioKbps.IsEnabled = _audio.SelectedItem is ComboBoxItem ai && (string)ai.Tag is "aac" or "opus";
+        FixExtension();
+        _sync = false;
+        UpdateSummary();
+    }
+
+    void SaveDefault()
+    {
+        if (!TryGetDims(out int w, out int h)) { Dialogs.Info(this, "Default export settings", "The width and height must be between 16 and 8192 pixels."); return; }
+        if (!TryGetFps(out int num, out int den)) { Dialogs.Info(this, "Default export settings", "Enter a frame rate like 30, 59.94 or 30000/1001."); return; }
+        int shortSide = _res.SelectedItem is ComboBoxItem ri && ri.Tag is int ss ? ss : 0;
+        _s.DefaultExport = new ExportProfile
+        {
+            ShortSide = shortSide, Width = w, Height = h,
+            UseProjectFps = num == _p.FpsNum && den == _p.FpsDen, FpsNum = num, FpsDen = den,
+            Interp = (_interp.SelectedItem as ComboBoxItem)?.Tag as string ?? "drop",
+            Codec = Codec.Key, Container = Container,
+            UseBitrate = _modeBr.IsChecked == true, Crf = 40 - (int)_quality.Value, BitrateMbps = _bitrate.Text.Trim(),
+            Speed = (_speed.SelectedItem as ComboBoxItem)?.Tag as string ?? "medium",
+            TenBit = _tenBit.IsChecked == true,
+            Audio = (_audio.SelectedItem as ComboBoxItem)?.Tag as string ?? "aac",
+            AudioKbps = (_audioKbps.SelectedItem as ComboBoxItem)?.Tag is int ak ? ak : 256,
+        };
+        _s.Save();
+        if (_settingsMode) { DialogResult = true; return; }
+        Dialogs.Info(this, "Default export settings", "Saved. \"My default\" will be selected automatically the next time you export.");
     }
 
     async void CheckEncodersAsync()
@@ -439,7 +496,7 @@ public class ExportDialog : Window
     {
         var dlg = new SaveFileDialog
         {
-            Title = "Save movie",
+            Title = "Export movie",
             FileName = Path.GetFileName(_path.Text),
             Filter = $"{Container.ToUpperInvariant()} video|*.{Container}",
             DefaultExt = "." + Container,
@@ -450,8 +507,8 @@ public class ExportDialog : Window
 
     void Save()
     {
-        if (!TryGetDims(out int w, out int h)) { Dialogs.Info(this, "Save movie", "The width and height must be between 16 and 8192 pixels."); return; }
-        if (!TryGetFps(out int num, out int den)) { Dialogs.Info(this, "Save movie", "Enter a frame rate like 30, 59.94 or 30000/1001."); return; }
+        if (!TryGetDims(out int w, out int h)) { Dialogs.Info(this, "Export movie", "The width and height must be between 16 and 8192 pixels."); return; }
+        if (!TryGetFps(out int num, out int den)) { Dialogs.Info(this, "Export movie", "Enter a frame rate like 30, 59.94 or 30000/1001."); return; }
         string path = _path.Text.Trim();
         try
         {
@@ -460,11 +517,11 @@ public class ExportDialog : Window
             if (string.IsNullOrEmpty(dir)) throw new Exception();
             Directory.CreateDirectory(dir);
         }
-        catch { Dialogs.Info(this, "Save movie", "That file location isn't valid."); return; }
-        if (File.Exists(path) && Dialogs.Ask(this, "Save movie", $"{Path.GetFileName(path)} already exists. Replace it?", "Replace", "Cancel") != 0) return;
+        catch { Dialogs.Info(this, "Export movie", "That file location isn't valid."); return; }
+        if (File.Exists(path) && Dialogs.Ask(this, "Export movie", $"{Path.GetFileName(path)} already exists. Replace it?", "Replace", "Cancel") != 0) return;
         double br = 20;
         if (_modeBr.IsChecked == true && (!double.TryParse(_bitrate.Text, NumberStyles.Float, CultureInfo.InvariantCulture, out br) || br <= 0.1 || br > 2000))
-        { Dialogs.Info(this, "Save movie", "Enter a bitrate in megabits per second, e.g. 40."); return; }
+        { Dialogs.Info(this, "Export movie", "Enter a bitrate in megabits per second, e.g. 40."); return; }
         var codec = Codec;
         Result = new ExportSettings
         {

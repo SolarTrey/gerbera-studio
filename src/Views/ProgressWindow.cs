@@ -66,7 +66,7 @@ public class ProgressWindow : Window
     {
         var cts = new CancellationTokenSource();
         CancelRequested += () => cts.Cancel();
-        _title.Text = "Saving your movie…";
+        _title.Text = "Exporting your movie…";
         _previewBox.Visibility = Visibility.Visible;
         _preview.Height = Math.Min(216, 384.0 * s.Height / s.Width);
         _detail.Text = $"{s.Width}×{s.Height} · {(double)s.FpsNum / s.FpsDen:0.###} fps · {s.Codec.Label}\nStarting…";
@@ -87,7 +87,7 @@ public class ProgressWindow : Window
                 }
                 wb.WritePixels(new Int32Rect(0, 0, p.Preview.W, p.Preview.H), p.Preview.D, p.Preview.W * 4, 0);
             }
-            Title = $"{(int)(100.0 * p.Frame / p.Total)}% - Saving movie";
+            Title = $"{(int)(100.0 * p.Frame / p.Total)}% - Exporting";
         });
         var sw = Stopwatch.StartNew();
         bool ok = false; string error = null;
@@ -100,14 +100,14 @@ public class ProgressWindow : Window
             if (error != null)
             {
                 Close();
-                Dialogs.Info(Owner, "The movie couldn't be saved", error.Length > 1500 ? error[..1500] + "…" : error);
+                Dialogs.Info(Owner, "The movie couldn't be exported", error.Length > 1500 ? error[..1500] + "…" : error);
             }
             else Close();
             return;
         }
         // Done
         Title = "Gerbera Studio";
-        _title.Text = "Your movie has been saved.";
+        _title.Text = "Your movie has been exported.";
         _bar.Value = 1;
         long size = 0; try { size = new FileInfo(s.OutputPath).Length; } catch { }
         _detail.Text = $"{Path.GetFileName(s.OutputPath)}\n{size / 1048576.0:0.0} MB · took {Fmt(sw.Elapsed)}";

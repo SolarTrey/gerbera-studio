@@ -44,9 +44,9 @@ So I built the editor I always wished existed: **the same easy, storyboard-first
 
 ### Modern formats and output
 - **Opens almost anything:** MP4, MOV, MKV, WebM, AVI, MTS and more; HEVC, AV1 and ProRes video; HEIC, AVIF, WebP and RAW-style photos; MP3, FLAC, WAV, Opus and other audio.
-- **Saves up to 8K**, with one-click presets for **4K Ultra HD**, 1080p, **vertical video** for Shorts, Reels and TikTok, square, web, an editing master and a lossless archive.
+- **Exports up to 8K**, with one-click presets for **4K Ultra HD**, 1080p, **vertical video** for Shorts, Reels and TikTok, square, web, an editing master and a lossless archive.
 - **Video formats:** H.264, H.265/HEVC, AV1, VP9, Apple ProRes 422 HQ and FFV1 lossless, with **10-bit color**.
-- **GPU-accelerated saving** on NVIDIA, Intel and AMD graphics cards when available.
+- **GPU-accelerated exporting** on NVIDIA, Intel and AMD graphics cards when available.
 - **Advanced frame rates:** 23.976 up to 240 fps, plus custom rates. There are three conversion modes: drop/duplicate, frame blending, and **motion interpolation** for buttery-smooth slow motion.
 - **Aspect ratios:** 16:9, 4:3, 9:16 vertical, 1:1 square and 21:9 cinema.
 
@@ -80,6 +80,9 @@ Play any clip **backwards**, picture and sound together.
 - **Animations:** fade, fly in, zoom, pop, typewriter, scrolling credits, cinematic zoom, wipe reveal, stamp, glitch, projector flicker.
 - Any installed font, plus outline, shadow, **glow**, background box or full-width bar, alignment and opacity.
 
+### Gerbera Labs
+Click the beaker in the **File** menu for experimental and just-for-fun extras. The first one is a **nostalgic loading screen**: an airy glass splash with soft beams of light and a glowing progress bar that matches your theme (starry night, amber sunset or bright clouds), for that classic "installing something in 2009" feeling. It's off by default, and more labs will be added over time.
+
 ### Themes
 Three looks, switchable from the title bar: **Morning** (light), **Evening** (dusky purple) and **Midnight** (black cinema). The storyboard is drawn as a real film strip, sprocket holes and all.
 
@@ -102,10 +105,12 @@ Three looks, switchable from the title bar: **Morning** (light), **Evening** (du
 | **Green screen:** the subject keyed over a background image | **Edit:** volume, fades, audio effects ("Match visual effect"), speed, **reverse** and trimming |
 | ![Titles](docs/screenshots/titles.png) | ![Music](docs/screenshots/music.png) |
 | **Text:** style presets, like this silent-film title card with an ornate frame | **Music:** volume, fades, audio effects, start time and trimming |
-| ![Project](docs/screenshots/project.png) | ![View](docs/screenshots/view.png) |
-| **Project:** audio mix, aspect ratios, frame rate and framing | **View:** storyboard zoom, thumbnail size, preview quality and themes |
-| ![File menu](docs/screenshots/file-menu.png) | ![Save movie](docs/screenshots/save-movie.png) |
-| **File menu:** recent projects (and a little rainbow) | **Save movie:** presets up to 8K, modern formats and GPU encoding |
+| ![Split](docs/screenshots/split.png) | ![Project](docs/screenshots/project.png) |
+| **Split:** a dedicated icon (two frames and a cut line), here on the Edit tab in Morning | **Project:** audio mix, aspect ratios, frame rate and framing |
+| ![View](docs/screenshots/view.png) | |
+| **View:** storyboard zoom, thumbnail size, preview quality and themes | |
+| ![File menu](docs/screenshots/file-menu.png) | ![Export movie](docs/screenshots/save-movie.png) |
+| **File menu:** recent projects, What's new, the Labs beaker and a little rainbow | **Export movie:** presets up to 8K, modern formats, GPU encoding and your own default |
 
 ---|---|
 | ![Midnight theme](docs/screenshots/main-midnight.png) | ![Evening theme](docs/screenshots/main-evening.png) |
@@ -114,19 +119,42 @@ Three looks, switchable from the title bar: **Morning** (light), **Evening** (du
 | **Morning** | **Visual effects** |
 | ![Green screen](docs/screenshots/green-screen.png) | ![Titles](docs/screenshots/titles.png) |
 | **Green screen** | **Silent-film title card** |
-| ![Save movie](docs/screenshots/save-movie.png) | |
-| **Save movie** | |
+| ![Export movie](docs/screenshots/save-movie.png) | |
+| **Export movie** | |
+
+---
+
+## What's new in 1.1
+
+**Gerbera Labs** (with an optional nostalgic loading screen), default export settings, a clearer **Export** button, a new Split icon, and a green-screen fix. See the [changelog](CHANGELOG.md).
+
+---
+
+## Gerbera Labs and the nostalgic loading screen
+
+Click the **beaker** next to the rainbow in the **File** menu to open **Labs**, a home for experimental and just-for-fun extras. It bubbles when you open it.
+
+| | |
+|---|---|
+| ![Labs](docs/screenshots/labs-midnight.png) | ![What's new](docs/screenshots/whats-new.png) |
+| **Labs:** switch extras on and off. The beaker matches your theme. | **What's new:** shown once after each update, or anytime from **File ▸ What's new** |
+
+The first lab is a **nostalgic loading screen**, a glassy splash in the spirit of 2009-era installers, with a sky that matches your theme:
+
+| Midnight | Evening | Morning |
+|---|---|---|
+| ![Midnight loading screen](docs/screenshots/splash-midnight.png) | ![Evening loading screen](docs/screenshots/splash-evening.png) | ![Morning loading screen](docs/screenshots/splash-morning.png) |
 
 ---
 
 ## Getting started
 
 ### 1. Install
-1. Download **GerberaStudio-Setup.exe** from the [latest release](../../releases/latest).
+1. Download **GerberaStudio-Setup-1.1.exe** from the [latest release](../../releases/latest).
 2. Run it. Windows SmartScreen may say *"Windows protected your PC"* because the installer isn't code-signed (signing certificates are expensive for a free hobby project). Click **More info ▸ Run anyway**.
 3. On first launch, Gerbera Studio offers to **download FFmpeg** automatically (about 140 MB, once). FFmpeg is the open-source engine that reads and writes video.
 
-**Requirements:** 64-bit Windows 10 or 11. A graphics card isn't required, but makes saving much faster.
+**Requirements:** 64-bit Windows 10 or 11. A graphics card isn't required, but makes exporting much faster.
 
 ### 2. Make your first movie
 1. **Add your clips:** click the storyboard area, or **Home ▸ Add videos and photos**, or drag files in from File Explorer.
@@ -136,7 +164,7 @@ Three looks, switchable from the title bar: **Morning** (light), **Evening** (du
 5. **Add a look:** open **Visual Effects** and pick an effect, or adjust brightness and contrast.
 6. **Add music:** **Home ▸ Add music**. Use the **Project** tab's audio mix slider to balance it against your clips' sound.
 7. **Add a title or captions:** **Home ▸ Title / Caption / Credits**, then type in the **Text** tab and try a **Style**.
-8. **Save your movie:** **Home ▸ Save movie**, choose a preset like **4K Ultra HD**, and click **Save movie**.
+8. **Export your movie:** **Home ▸ Export movie**, choose a preset like **4K Ultra HD**, and click **Export**. Tip: click **Set as my default** to remember your favorite settings.
 
 Also save your **project** (**Ctrl+S**) so you can come back and keep editing. Project files end in `.mmrproj`.
 
@@ -168,7 +196,7 @@ Also save your **project** (**Ctrl+S**) so you can come back and keep editing. P
 | **Ctrl+I** | Add videos and photos |
 | **Ctrl+T** | Add a title |
 | **Ctrl+S** | Save project |
-| **Ctrl+E** | Save movie |
+| **Ctrl+E** | Export movie |
 | **F11** | Full-screen preview |
 | **+ / −** | Zoom the storyboard |
 
@@ -180,18 +208,29 @@ Gerbera Studio is written in **C# / WPF (.NET 8)** and uses **FFmpeg** for decod
 
 1. Install the [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0) (x64).
 2. Clone this repo and run **`src\build.bat`**. It produces a self-contained `src\out\GerberaStudio.exe`.
-3. *(Optional)* Install [Inno Setup](https://jrsoftware.org/isdl.php) and run **`src\make-installer.bat`** to produce `src\installer\GerberaStudio-Setup-1.0.exe`.
+3. *(Optional)* Install [Inno Setup](https://jrsoftware.org/isdl.php) and run **`src\make-installer.bat`** to produce `src\installer\GerberaStudio-Setup-1.1.exe`.
 
 ### How it works
 - **`Engine/`**: FFmpeg-based decoders stream frames for each clip. A compositor renders transitions, effects, green screen, pan and zoom, and text. The audio graph builder mixes sound and effects through FFmpeg filters, and the exporter pipes rendered frames into the encoder.
-- **`Views/`**: the custom storyboard, galleries, Save movie dialog and progress window.
+- **`Views/`**: the custom storyboard, galleries, Export dialog and progress window.
 - **`Themes/`**: the Morning, Evening and Midnight color sets and the control styles.
 
 ---
 
 ## Thank you
 
-A huge thank-you to **Larry, Bruce, Steinbeck, Mom and Dad**. I couldn't have done this without you all. ❤️ (There's a little rainbow in the File menu.)
+A huge thank-you to **Larry, Bruce, Mom, Dad and Lily**. I couldn't have done this without you all. ❤️ (There's a little rainbow in the File menu.)
+
+---
+
+## Credits
+
+Loading-screen sky photos from [Unsplash](https://unsplash.com):
+- **Morning:** [Clyde RS](https://unsplash.com/@imclyde)
+- **Evening:** [Vincentiu Solomon](https://unsplash.com/@vincentiu)
+- **Midnight:** Phil Botha
+
+The wordmark on the loading screen uses [Outfit](https://fonts.google.com/specimen/Outfit), licensed under the SIL Open Font License.
 
 ---
 

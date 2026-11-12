@@ -46,4 +46,5 @@
     <SolidColorBrush x:Key="B.Sprocket" Color="#3A2D4F"/>
     <Color x:Key="C.Accent">#F2B134</Color>
     <FontFamily x:Key="F.Display">Bahnschrift SemiCondensed, Bahnschrift, Segoe UI</FontFamily>
+    <BitmapImage x:Key="I.Flask" UriSource="pack://application:,,,/Assets/flask-amber.png"/>
 </ResourceDictionary>

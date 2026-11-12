@@ -1,6 +1,6 @@
 ; Gerbera Studio installer (Inno Setup 6)
 #define AppName "Gerbera Studio"
-#define AppVersion "1.0"
+#define AppVersion "1.1"
 #define AppExe "GerberaStudio.exe"
 
 [Setup]
@@ -47,3 +47,33 @@ Root: HKA; Subkey: "Software\Classes\GerberaStudio.Project\shell\open\command"; 
 
 [Run]
 Filename: "{app}\{#AppExe}"; Description: "Launch {#AppName}"; Flags: nowait postinstall skipifsilent
+
+[Code]
+const
+  UninstKey = 'Software\Microsoft\Windows\CurrentVersion\Uninstall\{6E2B9D4A-7F1C-4C2E-9B7A-A1B2C3D4E5F6}_is1';
+
+function GetInstalledVersion(): String;
+var
+  v: String;
+begin
+  Result := '';
+  if RegQueryStringValue(HKCU, UninstKey, 'DisplayVersion', v) then Result := v
+  else if RegQueryStringValue(HKLM64, UninstKey, 'DisplayVersion', v) then Result := v
+  else if RegQueryStringValue(HKLM32, UninstKey, 'DisplayVersion', v) then Result := v;
+end;
+
+function InitializeSetup(): Boolean;
+var
+  old: String;
+begin
+  Result := True;
+  old := GetInstalledVersion();
+  if old = '' then Exit;
+  if old = '{#AppVersion}' then
+    Result := MsgBox('Gerbera Studio {#AppVersion} is already installed on this PC.' + #13#10#13#10 +
+                     'Do you want to reinstall it?', mbConfirmation, MB_YESNO) = IDYES
+  else
+    Result := MsgBox('Gerbera Studio ' + old + ' is installed on this PC.' + #13#10#13#10 +
+                     'Would you like to update it to version {#AppVersion}?' + #13#10 +
+                     'Your settings and projects will be kept.', mbConfirmation, MB_YESNO) = IDYES;
+end;

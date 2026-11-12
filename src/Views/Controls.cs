@@ -20,6 +20,9 @@ public class RibbonButton : Button
     public static readonly DependencyProperty IsLargeProperty = DependencyProperty.Register(nameof(IsLarge), typeof(bool), typeof(RibbonButton));
     public static readonly DependencyProperty GlyphBrushProperty = DependencyProperty.Register(nameof(GlyphBrush), typeof(Brush), typeof(RibbonButton));
     public static readonly DependencyProperty BadgeBrushProperty = DependencyProperty.Register(nameof(BadgeBrush), typeof(Brush), typeof(RibbonButton));
+    public static readonly DependencyProperty GlyphPathProperty = DependencyProperty.Register(nameof(GlyphPath), typeof(Geometry), typeof(RibbonButton));
+    /// <summary>Optional vector icon drawn instead of a font glyph.</summary>
+    public Geometry GlyphPath { get => (Geometry)GetValue(GlyphPathProperty); set => SetValue(GlyphPathProperty, value); }
     public string Glyph { get => (string)GetValue(GlyphProperty); set => SetValue(GlyphProperty, value); }
     public string Badge { get => (string)GetValue(BadgeProperty); set => SetValue(BadgeProperty, value); }
     public string Label { get => (string)GetValue(LabelProperty); set => SetValue(LabelProperty, value); }

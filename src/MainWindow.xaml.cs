@@ -87,6 +87,7 @@ public partial class MainWindow : Window
         {
             EnsureFfmpeg();
             Refresh();
+            ShowWhatsNewIfUpdated();
         };
         ProjBgColor.ColorPicked += hex => Mutate(() => _p.Background = hex);
         TitleBgColor.ColorPicked += hex => Mutate(() => { foreach (var c in TargetClips().Where(c => c.Kind == ClipKind.Title)) c.BgColor = hex; });
@@ -810,7 +811,12 @@ public partial class MainWindow : Window
             case "quickvert": SaveMovie("vertical"); break;
             case "exit": Close(); break;
             case "about": ShowAbout(); break;
+            case "whatsnew": new WhatsNewWindow { Owner = this }.ShowDialog(); break;
             case "ffmpeg": LocateFfmpeg(); break;
+            case "exportdefaults":
+                if (new ExportDialog(_p, _settings, null, settingsMode: true) { Owner = this }.ShowDialog() == true)
+                    ShowStatus("Default export settings saved.");
+                break;
             case "undo": Undo(); break;
             case "redo": Redo(); break;
             case "copy": CopyClips(false); break;
@@ -1708,7 +1714,13 @@ public partial class MainWindow : Window
         cm.Items.Add(Item("Paste", "", "paste", "Ctrl+V"));
         cm.Items.Add(Item("Remove", "", "remove", "Del"));
         cm.Items.Add(new Separator());
-        cm.Items.Add(Item("Split", "", "split", "M"));
+        {
+            var split = Item("Split", "", "split", "M");
+            var ic = new System.Windows.Shapes.Path { Data = Geometry.Parse("M1,3.5 L6,3.5 L6,12.5 L1,12.5 Z M10,3.5 L15,3.5 L15,12.5 L10,12.5 Z M8,1 L8,15"), StrokeThickness = 1.3, Stretch = Stretch.Uniform, Width = 13, Height = 13 };
+            ic.SetResourceReference(System.Windows.Shapes.Shape.StrokeProperty, "B.Text");
+            split.Icon = ic;
+            cm.Items.Add(split);
+        }
         cm.Items.Add(Item("Set start point", "", "setstart", "I"));
         cm.Items.Add(Item("Set end point", "", "setend", "O"));
         cm.Items.Add(new Separator());
@@ -1936,7 +1948,7 @@ public partial class MainWindow : Window
     void SaveMovie(string quick)
     {
         if (!CheckFfmpeg()) return;
-        if (_p.Clips.Count == 0) { Dialogs.Info(this, "Save movie", "Add some videos or photos before saving your movie."); return; }
+        if (_p.Clips.Count == 0) { Dialogs.Info(this, "Export movie", "Add some videos or photos before exporting your movie."); return; }
         _player.Pause();
         var dlg = new ExportDialog(_p, _settings, quick) { Owner = this };
         if (dlg.ShowDialog() != true || dlg.Result == null) return;
@@ -1953,13 +1965,13 @@ public partial class MainWindow : Window
     {
         string ff = FF.Ffmpeg != null ? FF.Version() : "FFmpeg not found";
         Dialogs.Info(this, "About Gerbera Studio",
-            "Gerbera Studio 1.0\nA love letter to the classic Windows movie editor, rebuilt with modern formats, 4K and beyond.\nNot affiliated with or endorsed by Microsoft.\n\n" +
+            "Gerbera Studio 1.1\nA love letter to the classic Windows movie editor, rebuilt with modern formats, 4K and beyond.\nNot affiliated with or endorsed by Microsoft.\n\n" +
             $"Engine: {ff}\n\n" +
             "Keyboard shortcuts\n" +
             "Space  Play / pause\n←  →  Previous / next frame   (Shift: 1 second, Ctrl: previous / next item)\n" +
             "Home / End  Start / end of movie\nM  Split    I / O  Set start / end point\nDelete  Remove\n" +
             "Ctrl+Z / Ctrl+Y  Undo / redo\nCtrl+X / C / V  Cut / copy / paste\nCtrl+I  Add videos and photos    Ctrl+T  Add title\n" +
-            "Ctrl+S  Save project    Ctrl+E  Save movie\nF11  Full-screen preview    + / −  Zoom storyboard");
+            "Ctrl+S  Save project    Ctrl+E  Export movie\nF11  Full-screen preview    + / −  Zoom storyboard");
     }
 
     void OnClosing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -1972,6 +1984,30 @@ public partial class MainWindow : Window
 
     // ===================================================================== screenshot tour (for the README)
 
+    /// <summary>Capture the window plus an open popup (e.g. the File menu) composited at its on-screen position.</summary>
+    void CaptureWithPopup(FrameworkElement popupChild, string file)
+    {
+        UpdateLayout(); popupChild.UpdateLayout();
+        var dpi = VisualTreeHelper.GetDpi(this);
+        var root = (FrameworkElement)Content;
+        int pw = (int)Math.Round(root.ActualWidth * dpi.DpiScaleX), ph = (int)Math.Round(root.ActualHeight * dpi.DpiScaleY);
+        var a = root.PointToScreen(new Point(0, 0)); var b = popupChild.PointToScreen(new Point(0, 0));
+        var off = new Point((b.X - a.X) / dpi.DpiScaleX, (b.Y - a.Y) / dpi.DpiScaleY);
+        var rtb = new RenderTargetBitmap(pw, ph, 96 * dpi.DpiScaleX, 96 * dpi.DpiScaleY, PixelFormats.Pbgra32);
+        var dv = new DrawingVisual();
+        using (var dc = dv.RenderOpen())
+        {
+            dc.DrawRectangle(Background ?? Brushes.Black, null, new Rect(0, 0, root.ActualWidth, root.ActualHeight));
+            dc.DrawRectangle(new VisualBrush(root), null, new Rect(0, 0, root.ActualWidth, root.ActualHeight));
+            dc.DrawRectangle(new VisualBrush(popupChild), null, new Rect(off.X, off.Y, popupChild.ActualWidth, popupChild.ActualHeight));
+        }
+        rtb.Render(dv);
+        var enc = new PngBitmapEncoder();
+        enc.Frames.Add(BitmapFrame.Create(rtb));
+        using var fs = File.Create(file);
+        enc.Save(fs);
+    }
+
     static void CaptureWindow(Window w, string file)
     {
         w.UpdateLayout();
@@ -1982,7 +2018,7 @@ public partial class MainWindow : Window
         var dv = new DrawingVisual();
         using (var dc = dv.RenderOpen())
         {
-            dc.DrawRectangle(w.Background ?? Brushes.Black, null, new Rect(0, 0, root.ActualWidth, root.ActualHeight));
+            if (!w.AllowsTransparency) dc.DrawRectangle(w.Background ?? Brushes.Black, null, new Rect(0, 0, root.ActualWidth, root.ActualHeight));
             dc.DrawRectangle(new VisualBrush(root), null, new Rect(0, 0, root.ActualWidth, root.ActualHeight));
         }
         rtb.Render(dv);
@@ -2040,6 +2076,84 @@ public partial class MainWindow : Window
             TabText.IsChecked = true;
             await Shot("titles.png", 3000);
 
+            // Animations (transitions + pan and zoom), in Evening, paused mid-transition
+            SetTheme("evening");
+            SelectClipAt(2, 0.0);
+            { var tl0 = _p.ComputeTimeline(); SeekTo(tl0.Start[2] + tl0.Trans[2] * 0.5); }
+            TabAnim.IsChecked = true;
+            await Shot("animations.png", 3500);
+
+            // Edit tab: audio effects (Match visual effect), reverse, speed — Midnight
+            SetTheme("dark");
+            SelectClipAt(4, 0.4);
+            TabVideo.IsChecked = true;
+            await Shot("edit-audio.png", 3000);
+
+            // Music tools, in Morning
+            SetTheme("light");
+            if (_p.Music.Count > 0)
+            {
+                Board.SelectedClips.Clear(); Board.SelectedCaption = null; Board.SelectedMusic = _p.Music[0].Id;
+                UpdateContext(); SyncRibbon(); UpdateInfo(); Board.InvalidateVisual();
+                SeekTo(_p.Music[0].Start + 6);
+                TabMusic.IsChecked = true;
+                await Shot("music.png", 2500);
+            }
+
+            // Project tab: aspect ratios, frame rates, audio mix — Evening
+            SetTheme("evening");
+            SelectClipAt(3, 0.5);
+            TabProject.IsChecked = true;
+            await Shot("project.png", 2500);
+
+            // View tab with the theme switcher — Midnight
+            SetTheme("dark");
+            TabView.IsChecked = true;
+            await Shot("view.png", 2000);
+
+            // File menu (recent projects, thank-you rainbow)
+            TabHome.IsChecked = true;
+            FileTabClick(this, new RoutedEventArgs());
+            await Task.Delay(1200);
+            if (FileMenu.Child is FrameworkElement fm) CaptureWithPopup(fm, Path.Combine(outDir, "file-menu.png"));
+            FileMenu.IsOpen = false;
+
+            // Edit tab with the new Split icon, in Morning
+            SetTheme("light");
+            SelectClipAt(2, 0.5);
+            TabVideo.IsChecked = true;
+            await Shot("split.png", 2500);
+            SetTheme("dark");
+
+            // Labs window, in each theme (the beaker changes color)
+            foreach (var th in new[] { "dark", "evening", "light" })
+            {
+                SetTheme(th);
+                var labs = new LabsWindow(_settings) { Owner = this };
+                labs.Show();
+                await Task.Delay(900);
+                CaptureWindow(labs, Path.Combine(outDir, $"labs-{(th == "dark" ? "midnight" : th == "light" ? "morning" : "evening")}.png"));
+                labs.Close();
+            }
+            SetTheme("dark");
+
+            // Nostalgic loading screen, one per theme
+            foreach (var th in new[] { "dark", "evening", "light" })
+            {
+                var sp = new SplashWindow(th) { Seconds = 999 };
+                sp.Show();
+                await Task.Delay(2200);
+                CaptureWindow(sp, Path.Combine(outDir, $"splash-{(th == "dark" ? "midnight" : th == "light" ? "morning" : "evening")}.png"));
+                sp.Close();
+            }
+
+            // What's new window
+            var wn = new WhatsNewWindow { Owner = this };
+            wn.Show();
+            await Task.Delay(900);
+            CaptureWindow(wn, Path.Combine(outDir, "whats-new.png"));
+            wn.Close();
+
             TabHome.IsChecked = true;
             var dlg = new ExportDialog(_p, _settings, "4k") { Owner = this };
             dlg.Show();
@@ -2057,6 +2171,36 @@ public partial class MainWindow : Window
         }
     }
 
+    System.Media.SoundPlayer _bubbles;
+
+    void LabsClick(object sender, RoutedEventArgs e)
+    {
+        FileMenu.IsOpen = false;
+        if (_settings.LabSounds)
+        {
+            try
+            {
+                _bubbles ??= new System.Media.SoundPlayer(Application.GetResourceStream(new Uri("pack://application:,,,/Assets/bubbles.wav")).Stream);
+                _bubbles.Play();
+            }
+            catch { }
+        }
+        new LabsWindow(_settings) { Owner = this }.ShowDialog();
+        _settings.Save();
+    }
+
+    /// <summary>After an update (not a fresh install), show the new version's changelog once.</summary>
+    void ShowWhatsNewIfUpdated()
+    {
+        if (Environment.GetCommandLineArgs().Contains("--shots")) return;
+        string v = WhatsNewWindow.AppVersion;
+        bool updated = !_settings.IsFirstRun && _settings.LastSeenVersion != v;
+        _settings.LastSeenVersion = v;
+        _settings.Save();
+        if (updated)
+            Dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle, () => new WhatsNewWindow { Owner = this }.ShowDialog());
+    }
+
     void RainbowClick(object sender, RoutedEventArgs e)
     {
         FileMenu.IsOpen = false;
@@ -2064,7 +2208,7 @@ public partial class MainWindow : Window
         ThemeHelper.ApplyTitleBar(w);
         var tb = new TextBlock { TextWrapping = TextWrapping.Wrap, MaxWidth = 380, FontSize = 15, LineHeight = 22, TextAlignment = TextAlignment.Center };
         tb.SetResourceReference(TextBlock.ForegroundProperty, "B.Text");
-        tb.Inlines.Add(new System.Windows.Documents.Run("Thank you Larry, Bruce, Steinbeck, Mom and Dad! I could not have done this without you all. "));
+        tb.Inlines.Add(new System.Windows.Documents.Run("Thank you Larry, Bruce, Mom, Dad and Lily! I could not have done this without you all. "));
         tb.Inlines.Add(new System.Windows.Documents.Run("\u2764") { Foreground = new SolidColorBrush(Color.FromRgb(0xE5, 0x39, 0x35)), FontFamily = new FontFamily("Segoe UI Symbol") });
         var ok = new Button { Content = "OK", IsDefault = true, IsCancel = true, MinWidth = 84, HorizontalAlignment = HorizontalAlignment.Center, Margin = new Thickness(0, 18, 0, 0) };
         ok.Click += (_, _) => w.Close();

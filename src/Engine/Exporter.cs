@@ -159,7 +159,7 @@ public static class Exporter
         p.FpsNum = s.FpsNum; p.FpsDen = s.FpsDen; p.Interp = s.Interp;
         var tl = p.ComputeTimeline();
         double total = p.TotalDuration(tl);
-        if (total <= 0) throw new Exception("There's nothing to save yet. Add some videos or photos first.");
+        if (total <= 0) throw new Exception("There's nothing to export yet. Add some videos or photos first.");
         int frames = Math.Max(1, (int)Math.Round(total * s.FpsNum / s.FpsDen));
         string rate = $"{s.FpsNum}/{s.FpsDen}";
 

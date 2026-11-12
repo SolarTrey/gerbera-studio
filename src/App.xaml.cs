@@ -26,6 +26,27 @@ public partial class App : Application
         {
             try { File.WriteAllText(Path.Combine(Path.GetTempPath(), "MovieMakerReborn-crash.txt"), ex.ExceptionObject?.ToString() ?? ""); } catch { }
         };
+        bool shots = e.Args.Length >= 3 && e.Args[0] == "--shots";
+        var st = Settings.Load();
+        if (!shots && st.LabSplash)
+        {
+            ShutdownMode = ShutdownMode.OnExplicitShutdown;
+            var sp = new SplashWindow(st.Theme);
+            sp.Completed += () =>
+            {
+                sp.Topmost = false; // let the editor and the What's new window come to the front
+                Launch(e);
+                ShutdownMode = ShutdownMode.OnMainWindowClose;
+                sp.FadeOutAndClose();
+            };
+            sp.Show();
+            return;
+        }
+        Launch(e);
+    }
+
+    void Launch(StartupEventArgs e)
+    {
         var w = new MainWindow();
         MainWindow = w;
         w.Show();

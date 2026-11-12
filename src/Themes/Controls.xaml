@@ -21,6 +21,8 @@
                             <Grid x:Name="IconGrid" Width="16" Height="16" VerticalAlignment="Center">
                                 <TextBlock x:Name="Gl" Text="{TemplateBinding Glyph}" FontFamily="{StaticResource IconFont}" FontSize="15"
                                            Foreground="{TemplateBinding GlyphBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                <Path x:Name="GP" Data="{TemplateBinding GlyphPath}" Stroke="{TemplateBinding GlyphBrush}" StrokeThickness="1.4" Stretch="Uniform" Margin="1"
+                                      StrokeLineJoin="Round" StrokeStartLineCap="Round" StrokeEndLineCap="Round" SnapsToDevicePixels="True"/>
                                 <TextBlock x:Name="Bg" Text="{TemplateBinding Badge}" FontFamily="{StaticResource IconFont}" FontSize="9" FontWeight="Bold"
                                            Foreground="{TemplateBinding BadgeBrush}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,-3,-2"/>
                             </Grid>
@@ -35,6 +37,8 @@
                             <Setter TargetName="IconGrid" Property="Height" Value="32"/>
                             <Setter TargetName="IconGrid" Property="HorizontalAlignment" Value="Center"/>
                             <Setter TargetName="Gl" Property="FontSize" Value="26"/>
+                            <Setter TargetName="GP" Property="StrokeThickness" Value="1.8"/>
+                            <Setter TargetName="GP" Property="Margin" Value="3"/>
                             <Setter TargetName="Bg" Property="FontSize" Value="13"/>
                             <Setter TargetName="Lb" Property="Margin" Value="0,3,0,0"/>
                             <Setter TargetName="Lb" Property="TextWrapping" Value="Wrap"/>

@@ -28,7 +28,7 @@
                     <Button x:Name="QatUndo" Style="{StaticResource QatButton}" Content="&#xE7A7;" ToolTip="Undo (Ctrl+Z)" Tag="undo" Click="Cmd" WindowChrome.IsHitTestVisibleInChrome="True"/>
                     <Button x:Name="QatRedo" Style="{StaticResource QatButton}" Content="&#xE7A6;" ToolTip="Redo (Ctrl+Y)" Tag="redo" Click="Cmd" WindowChrome.IsHitTestVisibleInChrome="True"/>
                     <Border Width="1" Height="16" Background="{DynamicResource B.Border}" Margin="5,0"/>
-                    <Button Style="{StaticResource QatButton}" Content="&#xE896;" ToolTip="Save movie (Ctrl+E)" Tag="savemovie" Click="Cmd" WindowChrome.IsHitTestVisibleInChrome="True"/>
+                    <Button Style="{StaticResource QatButton}" Content="&#xE896;" ToolTip="Export movie (Ctrl+E)" Tag="savemovie" Click="Cmd" WindowChrome.IsHitTestVisibleInChrome="True"/>
                 </StackPanel>
                 <TextBlock x:Name="TitleText" Text="My Movie - Gerbera Studio" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource B.Dim}" FontSize="12" FontFamily="{DynamicResource F.Display}"/>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
@@ -113,17 +113,17 @@
                                 <StackPanel>
                                     <v:RibbonButton Glyph="&#xE74D;" GlyphBrush="{DynamicResource B.GlyphRed}" Label="Remove" Tag="remove" Click="Cmd" ToolTip="Remove (Delete)"/>
                                     <v:RibbonButton Glyph="&#xE8B3;" Label="Select all" Tag="selectall" Click="Cmd" ToolTip="Select all (Ctrl+A)"/>
-                                    <v:RibbonButton Glyph="&#xE8C6;" Label="Split" Tag="split" Click="Cmd" ToolTip="Split at the playhead (M)"/>
+                                    <v:RibbonButton GlyphPath="M1,3.5 L6,3.5 L6,12.5 L1,12.5 Z M10,3.5 L15,3.5 L15,12.5 L10,12.5 Z M8,1 L8,15" Label="Split" Tag="split" Click="Cmd" ToolTip="Split at the playhead (M)"/>
                                 </StackPanel>
                             </StackPanel>
                         </HeaderedContentControl>
-                        <HeaderedContentControl Header="Share" Style="{StaticResource RibbonGroup}">
+                        <HeaderedContentControl Header="Export" Style="{StaticResource RibbonGroup}">
                             <StackPanel Orientation="Horizontal">
-                                <v:RibbonButton IsLarge="True" Glyph="&#xE714;" Badge="&#xE896;" BadgeBrush="{DynamicResource B.GlyphBlue}" GlyphBrush="{DynamicResource B.GlyphBlue}" Label="Save movie" Tag="savemovie" Click="Cmd" ToolTip="Save your movie as a video file (Ctrl+E)"/>
+                                <v:RibbonButton IsLarge="True" Glyph="&#xE714;" Badge="&#xE896;" BadgeBrush="{DynamicResource B.GlyphBlue}" GlyphBrush="{DynamicResource B.GlyphBlue}" Label="Export movie" Tag="savemovie" Click="Cmd" ToolTip="Export your movie as a video file (Ctrl+E)"/>
                                 <StackPanel>
-                                    <v:RibbonButton Glyph="&#xE7F4;" Label="4K Ultra HD" Tag="quick4k" Click="Cmd" ToolTip="Save movie in 4K (2160p) with recommended settings"/>
-                                    <v:RibbonButton Glyph="&#xE7F4;" Label="1080p HD" Tag="quick1080" Click="Cmd" ToolTip="Save movie in 1080p with recommended settings"/>
-                                    <v:RibbonButton Glyph="&#xE8EA;" Label="Vertical (Shorts)" Tag="quickvert" Click="Cmd" ToolTip="Save a 1080×1920 vertical video"/>
+                                    <v:RibbonButton Glyph="&#xE7F4;" Label="4K Ultra HD" Tag="quick4k" Click="Cmd" ToolTip="Export in 4K (2160p) with recommended settings"/>
+                                    <v:RibbonButton Glyph="&#xE7F4;" Label="1080p HD" Tag="quick1080" Click="Cmd" ToolTip="Export in 1080p with recommended settings"/>
+                                    <v:RibbonButton Glyph="&#xE8EA;" Label="Vertical (Shorts)" Tag="quickvert" Click="Cmd" ToolTip="Export a 1080×1920 vertical video"/>
                                 </StackPanel>
                             </StackPanel>
                         </HeaderedContentControl>
@@ -345,7 +345,7 @@
                         </HeaderedContentControl>
                         <HeaderedContentControl Header="Trim" Style="{StaticResource RibbonGroup}">
                             <StackPanel Orientation="Horizontal">
-                                <v:RibbonButton IsLarge="True" Glyph="&#xE8C6;" GlyphBrush="{DynamicResource B.GlyphOrange}" Label="Split" Tag="split" Click="Cmd" ToolTip="Split the clip at the playhead (M)"/>
+                                <v:RibbonButton IsLarge="True" GlyphPath="M1,3.5 L6,3.5 L6,12.5 L1,12.5 Z M10,3.5 L15,3.5 L15,12.5 L10,12.5 Z M8,1 L8,15" GlyphBrush="{DynamicResource B.GlyphOrange}" Label="Split" Tag="split" Click="Cmd" ToolTip="Split the clip at the playhead (M)"/>
                                 <StackPanel VerticalAlignment="Center" Margin="2,0">
                                     <v:RibbonButton Glyph="&#xE892;" Label="Set start point" Tag="setstart" Click="Cmd" ToolTip="Trim the beginning to the playhead (I)"/>
                                     <v:RibbonButton Glyph="&#xE893;" Label="Set end point" Tag="setend" Click="Cmd" ToolTip="Trim the end to the playhead (O)"/>
@@ -393,7 +393,7 @@
                         </HeaderedContentControl>
                         <HeaderedContentControl Header="Editing" Style="{StaticResource RibbonGroup}">
                             <StackPanel Orientation="Horizontal">
-                                <v:RibbonButton IsLarge="True" Glyph="&#xE8C6;" GlyphBrush="{DynamicResource B.GlyphOrange}" Label="Split" Tag="m_split" Click="Cmd"/>
+                                <v:RibbonButton IsLarge="True" GlyphPath="M1,3.5 L6,3.5 L6,12.5 L1,12.5 Z M10,3.5 L15,3.5 L15,12.5 L10,12.5 Z M8,1 L8,15" GlyphBrush="{DynamicResource B.GlyphOrange}" Label="Split" Tag="m_split" Click="Cmd"/>
                                 <StackPanel VerticalAlignment="Center">
                                     <v:RibbonButton Glyph="&#xE916;" Label="Start at playhead" Tag="m_settime" Click="Cmd"/>
                                     <v:RibbonButton Glyph="&#xE892;" Label="Set start point" Tag="m_setstart" Click="Cmd"/>
@@ -576,10 +576,12 @@
                             <Button Style="{StaticResource FileMenuButton}" Tag="save" Click="Cmd"><StackPanel Orientation="Horizontal"><TextBlock Text="&#xE74E;" FontFamily="{StaticResource IconFont}" FontSize="16" Margin="0,0,12,0"/><TextBlock Text="Save project"/></StackPanel></Button>
                             <Button Style="{StaticResource FileMenuButton}" Tag="saveas" Click="Cmd"><StackPanel Orientation="Horizontal"><TextBlock Text="&#xE792;" FontFamily="{StaticResource IconFont}" FontSize="16" Margin="0,0,12,0"/><TextBlock Text="Save project as…"/></StackPanel></Button>
                             <Separator/>
-                            <Button Style="{StaticResource FileMenuButton}" Tag="savemovie" Click="Cmd"><StackPanel Orientation="Horizontal"><TextBlock Text="&#xE714;" FontFamily="{StaticResource IconFont}" FontSize="16" Margin="0,0,12,0" Foreground="{DynamicResource B.GlyphBlue}"/><TextBlock Text="Save movie…"/></StackPanel></Button>
+                            <Button Style="{StaticResource FileMenuButton}" Tag="savemovie" Click="Cmd"><StackPanel Orientation="Horizontal"><TextBlock Text="&#xE714;" FontFamily="{StaticResource IconFont}" FontSize="16" Margin="0,0,12,0" Foreground="{DynamicResource B.GlyphBlue}"/><TextBlock Text="Export movie…"/></StackPanel></Button>
+                            <Button Style="{StaticResource FileMenuButton}" Tag="exportdefaults" Click="Cmd"><StackPanel Orientation="Horizontal"><TextBlock Text="&#xE713;" FontFamily="{StaticResource IconFont}" FontSize="16" Margin="0,0,12,0"/><TextBlock Text="Default export settings…"/></StackPanel></Button>
                             <Button Style="{StaticResource FileMenuButton}" Tag="snapshot" Click="Cmd"><StackPanel Orientation="Horizontal"><TextBlock Text="&#xE722;" FontFamily="{StaticResource IconFont}" FontSize="16" Margin="0,0,12,0"/><TextBlock Text="Save current frame…"/></StackPanel></Button>
                             <Separator/>
                             <Button Style="{StaticResource FileMenuButton}" Tag="ffmpeg" Click="Cmd"><StackPanel Orientation="Horizontal"><TextBlock Text="&#xE713;" FontFamily="{StaticResource IconFont}" FontSize="16" Margin="0,0,12,0"/><TextBlock Text="FFmpeg location…"/></StackPanel></Button>
+                            <Button Style="{StaticResource FileMenuButton}" Tag="whatsnew" Click="Cmd"><StackPanel Orientation="Horizontal"><TextBlock Text="&#xE789;" FontFamily="{StaticResource IconFont}" FontSize="16" Margin="0,0,12,0" Foreground="{DynamicResource B.Accent}"/><TextBlock Text="What's new"/></StackPanel></Button>
                             <Button Style="{StaticResource FileMenuButton}" Tag="about" Click="Cmd"><StackPanel Orientation="Horizontal"><TextBlock Text="&#xE946;" FontFamily="{StaticResource IconFont}" FontSize="16" Margin="0,0,12,0"/><TextBlock Text="About"/></StackPanel></Button>
                             <Button Style="{StaticResource FileMenuButton}" Tag="exit" Click="Cmd"><StackPanel Orientation="Horizontal"><TextBlock Text="&#xE7E8;" FontFamily="{StaticResource IconFont}" FontSize="16" Margin="0,0,12,0" Foreground="{DynamicResource B.GlyphRed}"/><TextBlock Text="Exit"/></StackPanel></Button>
                             <StackPanel Orientation="Horizontal" Margin="8,8,0,0">
@@ -592,6 +594,9 @@
                                     <Path Data="M7.8,12 A3.2,3.2 0 0 1 14.2,12" Stroke="#1E88E5" StrokeThickness="1.7"/>
                                     <Path Data="M9.5,12 A1.5,1.5 0 0 1 12.5,12" Stroke="#8E24AA" StrokeThickness="1.7"/>
                                 </Canvas>
+                            </Button>
+                            <Button Style="{StaticResource QatButton}" Width="30" Height="24" Margin="4,0,0,0" Click="LabsClick" ToolTip="Labs: experimental extras">
+                                <Image Source="{DynamicResource I.Flask}" Width="18" Height="18" RenderOptions.BitmapScalingMode="HighQuality"/>
                             </Button>
                             <Button Style="{StaticResource QatButton}" Width="30" Height="24" Margin="4,0,0,0" Content="&#xE897;" Tag="about" Click="Cmd" ToolTip="About and keyboard shortcuts"/>
                             </StackPanel>
